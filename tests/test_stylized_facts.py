@@ -17,19 +17,20 @@ class TestActirStylizedFacts(unittest.TestCase):
         env = ActirV01(ActirConfig(seed=42))
         env.reset()
 
-        # Baseline: mostly HOLD
+        # Give the system headroom so DEESCALATE can reduce crisis below baseline
+        env.crisis_level = 0.5
         actions_hold = {aid: Action.HOLD for aid in env.agent_ids}
         _, _, _, info0 = env.step(actions_hold)
         crisis0 = info0["crisis_level"]
 
-        # More hawkish actions
         env.reset()
+        env.crisis_level = 0.5
         actions_hawk = {aid: Action.SIGNAL_HAWK for aid in env.agent_ids}
         _, _, _, info1 = env.step(actions_hawk)
         crisis1 = info1["crisis_level"]
 
-        # More dovish actions
         env.reset()
+        env.crisis_level = 0.5
         actions_dove = {aid: Action.DEESCALATE for aid in env.agent_ids}
         _, _, _, info2 = env.step(actions_dove)
         crisis2 = info2["crisis_level"]
@@ -43,4 +44,4 @@ class TestActirStylizedFacts(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)
